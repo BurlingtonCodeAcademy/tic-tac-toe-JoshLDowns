@@ -10,28 +10,44 @@
 </head>
 
 <body>
-  <h2>Tic Tac Toe</h2>
-  <div class="board">
-    <div id="row-1">
-      <div id="cell-0"></div>
-      <div id="cell-1"></div>
-      <div id="cell-2"></div>
+  <div id="header">
+    <div id="player1">
+        <form id='subOne'>
+            <input class='textField' type=text />
+            <br>
+            <input class='sub' id = 'sub1'; type=submit value='Submit Player 1 Name' />
+          </form>
     </div>
-    <div id="row-2">
-      <div id="cell-3"></div>
-      <div id="cell-4"></div>
-      <div id="cell-5"></div>
-    </div>
-    <div id="row-3">
-      <div id="cell-6"></div>
-      <div id="cell-7"></div>
-      <div id="cell-8"></div>
+
+    <h1 id="title">Tic Tac Toe!</h1>
+
+    <div id="player2">
+        <form id='subTwo'>
+            <input class='textField' type=text />
+            <br>
+            <input class ='sub' id = 'sub2'; type=submit value='Submit Player 2 Name' />
+          </form>
     </div>
   </div>
 
-  <div class="status">
-    <button id="start" type="button">Start Game</button>
+  <div id="game">
+    <div class="box" id="one"></div>
+    <div class="box" id="two"></div>
+    <div class="box" id="three"></div>
+    <div class="box" id="four"></div>
+    <div class="box" id="five"></div>
+    <div class="box" id="six"></div>
+    <div class="box" id="seven"></div>
+    <div class="box" id="eight"></div>
+    <div class="box" id="nine"></div>
   </div>
+
+  <div class="status">
+    <p id="textDisplay"></p>
+    <button id="start2p" type="button">Start 2 Player Game</button>
+    <button id="start1p" type="button">Start 1 Player Game</button>
+  </div>
+
   <script src="main.js"></script>
 </body>
 

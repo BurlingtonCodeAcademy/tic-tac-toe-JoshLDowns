@@ -39,4 +39,15 @@ describe("Tic Tac Toe", () => {
     })
   })
 
+  describe('When X selects cell', ()=>{
+    it('the cell is clickable', ()=>{
+      cy.get('#one').should('be.clickable')
+    })
+
+    it('redraws the cell', ()=>{
+      cy.get('#one').click().contains('X')
+    })
+  })
+
+
 })
