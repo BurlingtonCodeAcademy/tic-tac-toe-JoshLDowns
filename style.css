@@ -81,7 +81,8 @@ div {
   align-items: center;
   justify-content: center;
   position: relative;
-  color : red;
+  color: red;
+  cursor: crosshair;
 }
 
 .textField {

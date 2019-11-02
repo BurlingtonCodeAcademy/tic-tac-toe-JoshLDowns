@@ -24,15 +24,15 @@ class Box {
         this.clicked = false;
     }
 }
-let one = new Box(document.getElementById("one"),1);
-let two = new Box(document.getElementById("two"),2);
-let three = new Box(document.getElementById("three"),3);
-let four = new Box(document.getElementById("four"),4);
-let five = new Box(document.getElementById("five"),5);
-let six = new Box(document.getElementById("six"),6);
-let seven = new Box(document.getElementById("seven"),7);
-let eight = new Box(document.getElementById("eight"),8);
-let nine = new Box(document.getElementById("nine"),9);
+let one = new Box(document.getElementById("one"), 1);
+let two = new Box(document.getElementById("two"), 2);
+let three = new Box(document.getElementById("three"), 3);
+let four = new Box(document.getElementById("four"), 4);
+let five = new Box(document.getElementById("five"), 5);
+let six = new Box(document.getElementById("six"), 6);
+let seven = new Box(document.getElementById("seven"), 7);
+let eight = new Box(document.getElementById("eight"), 8);
+let nine = new Box(document.getElementById("nine"), 9);
 
 boxArray = [one, two, three, four, five, six, seven, eight, nine];
 
@@ -48,7 +48,7 @@ let boxIDLookUp = {
     'nine': nine
 }
 
-let blockBoxLookUp = {
+let numBoxLookUp = {
     '1': one,
     '2': two,
     '3': three,
@@ -103,6 +103,8 @@ twoPlayerGame.addEventListener("click", () => {
     turnCount = 0;
     for (obj of boxArray) {
         obj.clicked = false;
+        obj.element.style.color = 'red';
+        obj.element.style.backgroundColor = 'orange';
     }
     for (box of boxes) {
         box.textContent = '';
@@ -125,7 +127,6 @@ function boxClick() {
             playerArrayO.push(boxNumLookUp[boxNum]);
             playerOClick();
         }
-        turnCount += 1;
         if (turnCount === 9) {
             for (box of boxes) {
                 box.removeEventListener("click", boxClick);
@@ -153,6 +154,10 @@ function playerXClick() {
                     //blockArray.push(arr);
                     //}
                     if (trueCountX === 3) {
+                        for (num of arr) {
+                            numBoxLookUp[num.toString()].element.style.backgroundColor = 'red';
+                            numBoxLookUp[num.toString()].element.style.color = 'yellow';
+                        }
                         for (box of boxes) {
                             box.removeEventListener("click", boxClick);
                         }
@@ -180,6 +185,7 @@ function playerXClick() {
             }
         }
         timer = setInterval(countDown, 1000);
+        turnCount += 1;
         return textDisplay.textContent = `It is ${playerOName}'s turn!`;
     } else {
         currentPlayer = 'O';
@@ -191,6 +197,7 @@ function playerXClick() {
             }
         }
         timer = setInterval(countDown, 1000);
+        turnCount += 1;
         return textDisplay.textContent = `It is ${playerOName}'s turn!`;
     }
 }
@@ -204,6 +211,10 @@ function playerOClick() {
                     trueCountO = trueCountO + 1;
                 }
                 if (trueCountO === 3) {
+                    for (num of arr) {
+                        numBoxLookUp[num.toString()].element.style.backgroundColor = 'red';
+                        numBoxLookUp[num.toString()].element.style.color = 'yellow';
+                    }
                     for (box of boxes) {
                         box.removeEventListener("click", boxClick);
                     }
@@ -230,6 +241,7 @@ function playerOClick() {
             }
         }
         timer = setInterval(countDown, 1000);
+        turnCount += 1;
         return textDisplay.textContent = `It is ${playerXName}'s turn!`;
     } else {
         currentPlayer = 'X';
@@ -241,6 +253,7 @@ function playerOClick() {
             }
         }
         timer = setInterval(countDown, 1000);
+        turnCount += 1;
         return textDisplay.textContent = `It is ${playerXName}'s turn!`;
     }
 }
@@ -270,12 +283,11 @@ function ranNoClickBox() {
     if (currentPlayer === 'X') {
         turnCount += 1;
         playerArrayX.push(noClick[index].value);
-        console.log(playerArrayX)
-            playerXClick();
+        playerXClick();
     } else {
         turnCount += 1;
         playerArrayO.push(noClick[index].value);
-            playerOClick();
+        playerOClick();
     }
 }
 
