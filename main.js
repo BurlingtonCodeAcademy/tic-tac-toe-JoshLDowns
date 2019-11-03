@@ -128,6 +128,7 @@ onePlayerGame.addEventListener("click", () => {
 twoPlayerGame.addEventListener("click", () => {
     twoPlayerGame.disabled = true;
     onePlayerGame.disabled = true;
+    onePlayer = false;
     textDisplay.textContent = `It is ${playerXName}'s turn!`
     timer = setInterval(countDown, 1000);;
     playerArrayO = [];
