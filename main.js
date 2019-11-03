@@ -13,6 +13,7 @@ let count = 6;
 let noClick = [];
 let index;
 let onePlayer = false;
+let compMove;
 
 let boxes = Array.from(document.getElementsByClassName("box"));
 
@@ -152,7 +153,7 @@ function boxClick() {
             playerArrayX.push(boxNumLookUp[boxNum]);
             playerXClick();
             if (onePlayer === true && turnCount !== 9) {
-                let compMove = compBestMove();
+                compMove = compBestMove();
                 playerArrayO.push(compMove);
                 compMove = compMove.toString();
                 currentBox = numBoxLookUp[compMove];
@@ -320,11 +321,19 @@ function ranNoClickBox() {
         return textDisplay.textContent = `OH NO! It's a Draw!!!!`;
     }
     if (currentPlayer === 'X') {
-        turnCount += 1;
         playerArrayX.push(noClick[index].value);
         playerXClick();
+        if (onePlayer === true && turnCount !== 9) {
+            compMove = compBestMove();
+            playerArrayO.push(compMove);
+            compMove = compMove.toString();
+            currentBox = numBoxLookUp[compMove];
+            currentBox.element.style.color = 'black';
+            currentBox.element.textContent = currentPlayer;
+            currentBox.clicked = true;
+            playerOClick();
+        }
     } else {
-        turnCount += 1;
         playerArrayO.push(noClick[index].value);
         playerOClick();
     }
@@ -419,6 +428,22 @@ function compBestMove() {
             return bestMove;
         } else if (playerArrayX.includes(5) && playerArrayX.includes(9)) {
             bestMove = 3;
+            return bestMove;
+        } else if (playerArrayX.includes(2) && playerArrayX.includes(4)) {
+            bestMove = 1;
+            return bestMove;
+        } else if (playerArrayX.includes(2) && playerArrayX.includes(6)) {
+            bestMove = 3;
+            return bestMove;
+        } else if (playerArrayX.includes(4) && playerArrayX.includes(8)) {
+            bestMove = 7;
+            return bestMove;
+        } else if (playerArrayX.includes(6) && playerArrayX.includes(8)) {
+            bestMove = 9;
+            return bestMove;
+        } else {
+            index = (Math.floor(Math.random() * noClick.length + 1) - 1); //makes random move, this needs to play to win or defend.
+            bestMove = noClick[index].value;
             return bestMove;
         }
     } else if (canWin()) {
