@@ -1,19 +1,18 @@
-let playerTurn = true;
 let playerArrayX = [];
 let playerArrayO = [];
-let compArray = [];
 let turnCount = 0;
 let trueCountX = 0;
 let trueCountO = 0;
-let mustBlock = false;
 let blockArray = [];
 let currentBox;
 let playerXName = 'X';
 let playerOName = 'O';
 let currentPlayer = 'X';
-let timerClick = true;
 let timer;
 let count = 6;
+let noClick = [];
+let index;
+let onePlayer = false;
 
 let boxes = Array.from(document.getElementsByClassName("box"));
 
@@ -79,6 +78,9 @@ let subOneButton = document.getElementById("sub1");
 subOne.addEventListener("submit", event => {
     event.preventDefault();
     playerXName = (event.target.querySelector('input').value).toString();
+    if (playerXName === '') {
+        playerXName = 'X';
+    }
     subOneButton.disabled = true;
 })
 
@@ -87,20 +89,47 @@ let subTwoButton = document.getElementById("sub2");
 subTwo.addEventListener("submit", event => {
     event.preventDefault();
     playerOName = (event.target.querySelector('input').value);
+    if (playerOName === '') {
+        playerOName = 'O';
+    }
     subTwoButton.disabled = true;
 })
 
 let textDisplay = document.getElementById("textDisplay");
 let onePlayerGame = document.getElementById("start1p");
-let twoPlayerGame = document.getElementById("start2p")
+let twoPlayerGame = document.getElementById("start2p");
 
-twoPlayerGame.addEventListener("click", () => {
+onePlayerGame.addEventListener("click", () => {
+    onePlayer = true;
+    playerOName = 'Computer';
     twoPlayerGame.disabled = true;
+    onePlayerGame.disabled = true;
     textDisplay.textContent = `It is ${playerXName}'s turn!`
     timer = setInterval(countDown, 1000);;
     playerArrayO = [];
     playerArrayX = [];
     turnCount = 0;
+    currentPlayer = 'X';
+    for (obj of boxArray) {
+        obj.clicked = false;
+        obj.element.style.color = 'red';
+        obj.element.style.backgroundColor = 'orange';
+    }
+    for (box of boxes) {
+        box.textContent = '';
+        box.addEventListener("click", boxClick);
+    }
+});
+
+twoPlayerGame.addEventListener("click", () => {
+    twoPlayerGame.disabled = true;
+    onePlayerGame.disabled = true;
+    textDisplay.textContent = `It is ${playerXName}'s turn!`
+    timer = setInterval(countDown, 1000);;
+    playerArrayO = [];
+    playerArrayX = [];
+    turnCount = 0;
+    currentPlayer = 'X';
     for (obj of boxArray) {
         obj.clicked = false;
         obj.element.style.color = 'red';
@@ -115,13 +144,23 @@ twoPlayerGame.addEventListener("click", () => {
 function boxClick() {
     let boxNum = event.target.id;
     currentBox = boxIDLookUp[boxNum];
-    if (playerTurn === true && currentBox.clicked === false) {
+    if (currentBox.clicked === false) {
         event.target.style.color = 'black';
         event.target.textContent = currentPlayer;
         currentBox.clicked = true;
         if (currentPlayer === 'X') {
             playerArrayX.push(boxNumLookUp[boxNum]);
             playerXClick();
+            if (onePlayer === true && turnCount !== 9) {
+                let compMove = compBestMove();
+                playerArrayO.push(compMove);
+                compMove = compMove.toString();
+                currentBox = numBoxLookUp[compMove];
+                currentBox.element.style.color = 'black';
+                currentBox.element.textContent = currentPlayer;
+                currentBox.clicked = true;
+                playerOClick();
+            }
 
         } else {
             playerArrayO.push(boxNumLookUp[boxNum]);
@@ -134,6 +173,7 @@ function boxClick() {
             subOneButton.disabled = false;
             subTwoButton.disabled = false;
             twoPlayerGame.disabled = false;
+            onePlayerGame.disabled = false;
             clearInterval(timer);
             return textDisplay.textContent = `OH NO! It's a Draw!!!!`;
         }
@@ -149,10 +189,6 @@ function playerXClick() {
             for (let i = 0; i < playerArrayX.length; i++) {
                 if (arr.includes(playerArrayX[i])) {
                     trueCountX = trueCountX + 1;
-                    //if (trueCountX === 2) {
-                    //mustBlock = true;
-                    //blockArray.push(arr);
-                    //}
                     if (trueCountX === 3) {
                         for (num of arr) {
                             numBoxLookUp[num.toString()].element.style.backgroundColor = 'red';
@@ -164,6 +200,7 @@ function playerXClick() {
                         subOneButton.disabled = false;
                         subTwoButton.disabled = false;
                         twoPlayerGame.disabled = false;
+                        onePlayerGame.disabled = false;
                         clearInterval(timer);
                         count = 6;
                         for (obj of boxArray) {
@@ -221,6 +258,7 @@ function playerOClick() {
                     subOneButton.disabled = false;
                     subTwoButton.disabled = false;
                     twoPlayerGame.disabled = false;
+                    onePlayerGame.disabled = false;
                     clearInterval(timer);
                     count = 6;
                     for (obj of boxArray) {
@@ -259,13 +297,13 @@ function playerOClick() {
 }
 
 function ranNoClickBox() {
-    let noClick = [];
+    noClick = [];
     for (obj of boxArray) {
         if (obj.clicked === false) {
             noClick.push(obj)
         }
     }
-    let index = (Math.floor(Math.random() * noClick.length + 1) - 1);
+    index = (Math.floor(Math.random() * noClick.length + 1) - 1);
     noClick[index].clicked = true;
     noClick[index].element.textContent = currentPlayer;
     noClick[index].element.style.color = 'navy';
@@ -276,6 +314,7 @@ function ranNoClickBox() {
         subOneButton.disabled = false;
         subTwoButton.disabled = false;
         twoPlayerGame.disabled = false;
+        onePlayerGame.disabled = false;
         clearInterval(timer);
         count = 6;
         return textDisplay.textContent = `OH NO! It's a Draw!!!!`;
@@ -304,19 +343,93 @@ function countDown() {
         }
     }
 }
-//function compClick() {
-//    if (mustBlock === true) {
-//        for (element of blockArray) {
-//            let blockBox = blockBoxLookUp[element.toString()];
-//            if (blockBox.clicked === false) {
-//                blockBox.element.textContent = "O";
-//                return compArray.push(element);
-//            }
-//        }
-//    } else if (turnCount === 0) {
-//        one.clicked = true;
-//        one.removeEventListener("click", boxClick);
-//        currentBox = document.getElementById("one");
-//        currentBox.textContent = "O";
-//    } 
-//}
+
+function canWin() {
+    let winArray = [];
+    for (arr of winningArrays) {
+        trueCountO = 0;
+        for (let i = 0; i < playerArrayX.length; i++) {
+            if (arr.includes(playerArrayO[i])) {
+                trueCountO = trueCountO + 1;
+            }
+            if (trueCountO === 2) {
+                winArray.push(arr);
+            }
+        }
+    }
+    if (winArray.length > 0) { //checks if computer has win and sets that move
+        for (arr of winArray) {
+            for (item of arr) {
+                if (numBoxLookUp[item.toString()].clicked === false) {
+                    return item;
+                }
+            }
+        }
+    } else {
+        return false;
+    }
+    return false;
+}
+
+function mustBlock() {
+    for (arr of winningArrays) {
+        trueCountX = 0;
+        for (let i = 0; i < playerArrayX.length; i++) {
+            if (arr.includes(playerArrayX[i])) {
+                trueCountX = trueCountX + 1;
+            }
+            if (trueCountX === 2) {
+                blockArray.push(arr);
+            }
+        }
+    }
+    if (blockArray.length > 0) { //checks if opponent has win and sets block move
+        for (arr of blockArray) {
+            for (item of arr) {
+                if (numBoxLookUp[item.toString()].clicked === false) {
+                    return item;
+                }
+            }
+        }
+    } else {
+        return false;
+    }
+    return false;
+}
+
+function compBestMove() {
+    let bestMove;
+    noClick = [];
+    for (obj of boxArray) {
+        if (obj.clicked === false) {
+            noClick.push(obj)
+        }
+    }
+    if (noClick.length === 8) {  //determines first move
+        if (five.clicked === false) {
+            bestMove = 5;
+            return bestMove;
+        } else {
+            bestMove = 1;
+            return bestMove;
+        }
+    } else if (noClick.length === 6 && mustBlock() === false) {
+        if (playerArrayX.includes(1) && playerArrayX.includes(9) || playerArrayX.includes(3) && playerArrayX.includes(7)) {
+            bestMove = 2;
+            return bestMove;
+        } else if (playerArrayX.includes(5) && playerArrayX.includes(9)) {
+            bestMove = 3;
+            return bestMove;
+        }
+    } else if (canWin()) {
+        bestMove = canWin();
+        return bestMove;
+    } else if (mustBlock()) {
+        bestMove = mustBlock();
+        return bestMove;
+    } else {
+        index = (Math.floor(Math.random() * noClick.length + 1) - 1); //makes random move when inconsequential... basically a catch all right now
+        bestMove = noClick[index].value;
+        return bestMove;
+    }
+}
