@@ -109,7 +109,10 @@ onePlayerGame.addEventListener("click", () => {
     timer = setInterval(countDown, 1000);;
     playerArrayO = [];
     playerArrayX = [];
+    blockArray = [];
     turnCount = 0;
+    trueCountO = 0;
+    trueCountX = 0;
     currentPlayer = 'X';
     for (obj of boxArray) {
         obj.clicked = false;
@@ -129,7 +132,10 @@ twoPlayerGame.addEventListener("click", () => {
     timer = setInterval(countDown, 1000);;
     playerArrayO = [];
     playerArrayX = [];
+    blockArray = [];
     turnCount = 0;
+    trueCountO = 0;
+    trueCountX = 0;
     currentPlayer = 'X';
     for (obj of boxArray) {
         obj.clicked = false;
