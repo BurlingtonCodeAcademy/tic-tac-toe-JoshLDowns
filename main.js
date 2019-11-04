@@ -216,6 +216,7 @@ function playerXClick() {
                                 obj.element.textContent = ``;
                             }
                         }
+                        onePlayer = false;
                         return textDisplay.textContent = `${playerXName} WINS!!!!`;
                     }
                 }
