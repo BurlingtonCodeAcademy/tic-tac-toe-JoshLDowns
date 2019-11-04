@@ -15,9 +15,9 @@ let index;
 let onePlayer = false;
 let compMove;
 
-let boxes = Array.from(document.getElementsByClassName("box"));
+let boxes = Array.from(document.getElementsByClassName("box"));  //array of all divs to make setting event listeners easier
 
-class Box {
+class Box {  //each box is an object with an element to point to, a value, and a clicked boolean
     constructor(element, value) {
         this.element = element;
         this.value = value;
@@ -34,8 +34,8 @@ let seven = new Box(document.getElementById("seven"), 7);
 let eight = new Box(document.getElementById("eight"), 8);
 let nine = new Box(document.getElementById("nine"), 9);
 
-boxArray = [one, two, three, four, five, six, seven, eight, nine];
-
+boxArray = [one, two, three, four, five, six, seven, eight, nine];  //array of each object for referencing
+//various lookup objects for different outputs in the program
 let boxIDLookUp = {
     'one': one,
     'two': two,
@@ -71,9 +71,9 @@ let boxNumLookUp = {
     eight: 8,
     nine: 9
 }
-
+//winning arrays to reference and check if wins or blocks are needed
 let winningArrays = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]];
-
+//submit player X's name
 let subOne = document.getElementById("subOne");
 let subOneButton = document.getElementById("sub1");
 subOne.addEventListener("submit", event => {
@@ -84,7 +84,7 @@ subOne.addEventListener("submit", event => {
     }
     subOneButton.disabled = true;
 })
-
+//submit player O's name
 let subTwo = document.getElementById("subTwo");
 let subTwoButton = document.getElementById("sub2");
 subTwo.addEventListener("submit", event => {
@@ -96,10 +96,10 @@ subTwo.addEventListener("submit", event => {
     subTwoButton.disabled = true;
 })
 
-let textDisplay = document.getElementById("textDisplay");
+let textDisplay = document.getElementById("textDisplay");  //sets event listener for status window
 let onePlayerGame = document.getElementById("start1p");
 let twoPlayerGame = document.getElementById("start2p");
-
+//initializes one player game
 onePlayerGame.addEventListener("click", () => {
     onePlayer = true;
     playerOName = 'Computer';
@@ -124,7 +124,7 @@ onePlayerGame.addEventListener("click", () => {
         box.addEventListener("click", boxClick);
     }
 });
-
+//initializes two player game
 twoPlayerGame.addEventListener("click", () => {
     twoPlayerGame.disabled = true;
     onePlayerGame.disabled = true;
@@ -148,7 +148,7 @@ twoPlayerGame.addEventListener("click", () => {
         box.addEventListener("click", boxClick);
     }
 });
-
+//event upon clicking a box
 function boxClick() {
     let boxNum = event.target.id;
     currentBox = boxIDLookUp[boxNum];
@@ -189,7 +189,7 @@ function boxClick() {
         textDisplay.textContent = `NO! Pick another one!`;
     }
 }
-
+//runs when it is player x's turn
 function playerXClick() {
     if (playerArrayX.length >= 3) {
         for (arr of winningArrays) {
@@ -247,7 +247,7 @@ function playerXClick() {
         return textDisplay.textContent = `It is ${playerOName}'s turn!`;
     }
 }
-
+//runs when it is player o's turn (I think I can combine the two playerClick functions into one simple function, but it's working as is, will work on updating)
 function playerOClick() {
     if (playerArrayO.length >= 3) {
         for (arr of winningArrays) {
@@ -304,7 +304,7 @@ function playerOClick() {
         return textDisplay.textContent = `It is ${playerXName}'s turn!`;
     }
 }
-
+//function for randomly checking a box on timeout
 function ranNoClickBox() {
     noClick = [];
     for (obj of boxArray) {
@@ -346,7 +346,7 @@ function ranNoClickBox() {
         playerOClick();
     }
 }
-
+//timer countdown function
 function countDown() {
     if (count === 0) {
         ranNoClickBox();
@@ -360,7 +360,7 @@ function countDown() {
         }
     }
 }
-
+//determines if computer player can win and sets move
 function canWin() {
     let winArray = [];
     for (arr of winningArrays) {
@@ -374,7 +374,7 @@ function canWin() {
             }
         }
     }
-    if (winArray.length > 0) { //checks if computer has win and sets that move
+    if (winArray.length > 0) {
         for (arr of winArray) {
             for (item of arr) {
                 if (numBoxLookUp[item.toString()].clicked === false) {
@@ -387,7 +387,7 @@ function canWin() {
     }
     return false;
 }
-
+//determines if human has a winning move available and sets the computers move to block
 function mustBlock() {
     for (arr of winningArrays) {
         trueCountX = 0;
@@ -413,7 +413,7 @@ function mustBlock() {
     }
     return false;
 }
-
+//determines the computers best move
 function compBestMove() {
     let bestMove;
     noClick = [];
