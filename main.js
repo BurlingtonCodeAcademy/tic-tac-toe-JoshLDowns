@@ -365,7 +365,7 @@ function canWin() {
     let winArray = [];
     for (arr of winningArrays) {
         trueCountO = 0;
-        for (let i = 0; i < playerArrayX.length; i++) {
+        for (let i = 0; i < playerArrayO.length; i++) {
             if (arr.includes(playerArrayO[i])) {
                 trueCountO = trueCountO + 1;
             }
@@ -400,11 +400,47 @@ function mustBlock() {
             }
         }
     }
-    if (blockArray.length > 0) { //checks if opponent has win and sets block move
+    if (blockArray.length > 0) {
         for (arr of blockArray) {
             for (item of arr) {
                 if (numBoxLookUp[item.toString()].clicked === false) {
                     return item;
+                }
+            }
+        }
+    } else {
+        return false;
+    }
+    return false;
+}
+//determines if ther is a play to set up a pontential win
+function setUpWin() {
+    let setUpArray = [];
+    let notClicked = 0;
+    for (arr of winningArrays) {
+        trueCountO = 0;
+        for (let i = 0; i < playerArrayO.length; i++) {
+            if (arr.includes(playerArrayO[i])) {
+                trueCountO = trueCountO + 1;
+            }
+            if (trueCountO === 1) {
+                setUpArray.push(arr);
+            }
+        }
+    }
+    if (setUpArray.length > 0) {
+        for (arr of setUpArray) {
+            notClicked = 0;
+                for (num of arr) {
+                    if (numBoxLookUp[num.toString()].clicked === false) {
+                        notClicked += 1;
+                    }
+                if (notClicked === 2) {
+                    if (numBoxLookUp[arr[0].toString()].clicked === false) {
+                    return arr[0];
+                    } else {
+                    return arr[1];
+                    }
                 }
             }
         }
@@ -450,7 +486,7 @@ function compBestMove() {
             bestMove = 9;
             return bestMove;
         } else {
-            index = (Math.floor(Math.random() * noClick.length + 1) - 1); //makes random move, this needs to play to win or defend.
+            index = (Math.floor(Math.random() * noClick.length + 1) - 1); //catch all move so game doesn't break, shouldn't ever hit.
             bestMove = noClick[index].value;
             return bestMove;
         }
@@ -460,8 +496,11 @@ function compBestMove() {
     } else if (mustBlock()) {
         bestMove = mustBlock();
         return bestMove;
+    } else if (setUpWin()) {
+        bestMove = setUpWin();
+        return bestMove;
     } else {
-        index = (Math.floor(Math.random() * noClick.length + 1) - 1); //makes random move when inconsequential... basically a catch all right now
+        index = (Math.floor(Math.random() * noClick.length + 1) - 1); //catch all move so game doesn't break, shouldn't ever hit.
         bestMove = noClick[index].value;
         return bestMove;
     }
