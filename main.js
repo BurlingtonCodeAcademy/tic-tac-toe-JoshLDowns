@@ -485,7 +485,10 @@ function compBestMove() {
         } else if (playerArrayX.includes(6) && playerArrayX.includes(8)) {
             bestMove = 9;
             return bestMove;
-        } else {
+        } else if (setUpWin()) {
+            bestMove = setUpWin();
+            return bestMove;
+        }else {
             index = (Math.floor(Math.random() * noClick.length + 1) - 1); //catch all move so game doesn't break, shouldn't ever hit.
             bestMove = noClick[index].value;
             return bestMove;
