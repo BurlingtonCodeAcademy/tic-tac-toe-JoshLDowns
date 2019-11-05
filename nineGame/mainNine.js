@@ -1,7 +1,5 @@
 let playerArray = [];
 let turnCount = 0;
-let trueCountX = 0;
-let trueCountO = 0;
 let trueCount = 0;
 let currentBox;
 let currentBoard;
@@ -10,10 +8,10 @@ let playerOName = 'O';
 let playerName;
 let currentPlayer = 'X';
 let player;
-let timer;
-let count = 6;
-let noClick = [];
-let index;
+//let timer;
+//let count = 6;
+//let noClick = [];
+//let index;
 
 let boxes = Array.from(document.getElementsByClassName("box"));
 
@@ -231,6 +229,8 @@ let gameG = new Board(document.getElementById("gameG"), boxArrayG);
 let gameH = new Board(document.getElementById("gameH"), boxArrayH);
 let gameI = new Board(document.getElementById("gameI"), boxArrayI);
 
+let boardArray = [gameA, gameB, gameC, gameD, gameE, gameF, gameG, gameH, gameI];
+
 boardLookUp = {
     'gameA' : gameA,
     'gameB' : gameB,
@@ -255,9 +255,10 @@ twoPlayerGame.addEventListener("click", () => {
     playerArray = [];
     //blockArray = [];
     turnCount = 0;
-    trueCountO = 0;
-    trueCountX = 0;
     currentPlayer = 'X';
+    for (board of boardArray) {
+        board.element.style.opacity = '.3';
+    }
     gameE.element.style.opacity = '1';
     currentBoard = gameE;
     for (obj of boxArray) {
