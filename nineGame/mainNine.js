@@ -217,23 +217,41 @@ let boxArrayG = [g1, g2, g3, g4, g5, g6, g7, g8, g9];
 let boxArrayH = [h1, h2, h3, h4, h5, h6, h7, h8, h9];
 let boxArrayI = [i1, i2, i3, i4, i5, i6, i7, i8, i9];
 
-let gameA = document.getElementById("gameA");
-let gameB = document.getElementById("gameB");
-let gameC = document.getElementById("gameC");
-let gameD = document.getElementById("gameD");
-let gameE = document.getElementById("gameE");
-let gameF = document.getElementById("gameF");
-let gameG = document.getElementById("gameG");
-let gameH = document.getElementById("gameH");
-let gameI = document.getElementById("gameI");
+class Board {
+    constructor(element, boxesInside) {
+        this.element = element;
+        this.boxesInside = boxesInside;
+    }
+}
+let gameA = new Board(document.getElementById("gameA"), boxArrayA);
+let gameB = new Board(document.getElementById("gameB"), boxArrayB);
+let gameC = new Board(document.getElementById("gameC"), boxArrayC);
+let gameD = new Board(document.getElementById("gameD"), boxArrayD);
+let gameE = new Board(document.getElementById("gameE"), boxArrayE);
+let gameF = new Board(document.getElementById("gameF"), boxArrayF);
+let gameG = new Board(document.getElementById("gameG"), boxArrayG);
+let gameH = new Board(document.getElementById("gameH"), boxArrayH);
+let gameI = new Board(document.getElementById("gameI"), boxArrayI);
+
+boardLookUp = {
+    'gameA' : gameA,
+    'gameB' : gameB,
+    'gameC' : gameC,
+    'gameD' : gameD,
+    'gameE' : gameE,
+    'gameF' : gameF,
+    'gameG' : gameG,
+    'gameH' : gameH,
+    'gameI' : gameI
+}
 
 let textDisplay = document.getElementById("textDisplay");  //sets event listener for status window
-let onePlayerGame = document.getElementById("start1p");
+//let onePlayerGame = document.getElementById("start1p");
 let twoPlayerGame = document.getElementById("start2p");
 
 twoPlayerGame.addEventListener("click", () => {
     twoPlayerGame.disabled = true;
-    onePlayerGame.disabled = true;
+    //onePlayerGame.disabled = true;
     onePlayer = false;
     textDisplay.textContent = `It is ${playerXName}'s turn!`
     playerArrayO = [];
@@ -243,7 +261,8 @@ twoPlayerGame.addEventListener("click", () => {
     trueCountO = 0;
     trueCountX = 0;
     currentPlayer = 'X';
-    gameE.style.opacity = '1';
+    gameE.element.style.opacity = '1';
+    currentBoard = gameE;
     for (obj of boxArray) {
         obj.clicked = false;
         obj.element.textContent = '';
@@ -263,11 +282,11 @@ function boxClick() {
         currentBox.clicked = true;
         if (currentPlayer === 'X') {
             currentBox.xClick = true;
-            playerArrayX.push(currentBox.value);
+            //playerArrayX.push(currentBox.value);
             playerClick();
         } else {
             currentBox.oClick = true;
-            playerArrayO.push(currentBox.value);
+            //playerArrayO.push(currentBox.value);
             playerClick();
         }
         if (turnCount === 81) {
@@ -284,12 +303,25 @@ function boxClick() {
 }
 
 function playerClick() {
+    console.log(currentBoard);
     player = currentPlayer;
     if (player === 'X') {
-        playerArray = playerArrayX;
+        //playerArray = playerArrayX;
+        playerArray = [];
+        for (obj of currentBoard.boxesInside) {
+            if (obj.xClick === true) {
+                playerArray.push(obj.value);
+            }
+        }
         playerName = playerXName;
     } else {
-        playerArray = playerArrayO;
+        //playerArray = playerArrayO;
+        playerArray = [];
+        for (obj of currentBoard.boxesInside) {
+            if (obj.oClick === true) {
+                playerArray.push(obj.value);
+            }
+        }
         playerName = playerOName;
     }
     if (playerArray.length >= 3) {
@@ -308,7 +340,7 @@ function playerClick() {
                             box.removeEventListener("click", boxClick);
                         }
                         twoPlayerGame.disabled = false;
-                        onePlayerGame.disabled = false;
+                        //onePlayerGame.disabled = false;
                         for (obj of boxArray) {
                             if (obj.clicked === false) {
                                 obj.element.textContent = ``;
@@ -326,6 +358,15 @@ function playerClick() {
             currentPlayer = 'X';
             playerName = playerXName;
         }
+        currentBoard.element.style.opacity = '.5';
+        for (obj of currentBoard.boxesInside) {
+            obj.element.removeEventListener("click", boxClick);
+        }
+        currentBoard = boardLookUp[currentBox.moveValue];
+        currentBoard.element.style.opacity = '1';
+        for (obj of currentBoard.boxesInside) {
+            obj.element.addEventListener("click", boxClick);
+        }
         turnCount += 1;
         return textDisplay.textContent = `It is ${playerName}'s turn!`;
     } else {
@@ -335,6 +376,15 @@ function playerClick() {
         } else {
             currentPlayer = 'X';
             playerName = playerXName;
+        }
+        currentBoard.element.style.opacity = '.5';
+        for (obj of currentBoard.boxesInside) {
+            obj.element.removeEventListener("click", boxClick);
+        }
+        currentBoard = boardLookUp[currentBox.moveValue];
+        currentBoard.element.style.opacity = '1';
+        for (obj of currentBoard.boxesInside) {
+            obj.element.addEventListener("click", boxClick);
         }
         turnCount += 1;
         return textDisplay.textContent = `It is ${playerName}'s turn!`;
