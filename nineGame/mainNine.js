@@ -300,7 +300,6 @@ function boxClick() {
 }
 
 function playerClick() {
-    console.log(currentBoard);
     player = currentPlayer;
     if (player === 'X') {
         playerArray = [];
@@ -346,7 +345,7 @@ function playerClick() {
                 }
             }
         }
-        if (player = 'X') {
+        if (player === 'X') {
             currentPlayer = 'O';
             playerName = playerOName;
         } else {
