@@ -1,5 +1,3 @@
-let playerArrayX = [];
-let playerArrayO = [];
 let playerArray = [];
 let turnCount = 0;
 let trueCountX = 0;
@@ -254,9 +252,8 @@ twoPlayerGame.addEventListener("click", () => {
     //onePlayerGame.disabled = true;
     onePlayer = false;
     textDisplay.textContent = `It is ${playerXName}'s turn!`
-    playerArrayO = [];
-    playerArrayX = [];
-    blockArray = [];
+    playerArray = [];
+    //blockArray = [];
     turnCount = 0;
     trueCountO = 0;
     trueCountX = 0;
@@ -265,6 +262,8 @@ twoPlayerGame.addEventListener("click", () => {
     currentBoard = gameE;
     for (obj of boxArray) {
         obj.clicked = false;
+        obj.xClick = false;
+        obj.oClick = false;
         obj.element.textContent = '';
         obj.element.style.color = 'red';
         obj.element.style.backgroundColor = 'orange';
@@ -282,11 +281,9 @@ function boxClick() {
         currentBox.clicked = true;
         if (currentPlayer === 'X') {
             currentBox.xClick = true;
-            //playerArrayX.push(currentBox.value);
             playerClick();
         } else {
             currentBox.oClick = true;
-            //playerArrayO.push(currentBox.value);
             playerClick();
         }
         if (turnCount === 81) {
@@ -306,7 +303,6 @@ function playerClick() {
     console.log(currentBoard);
     player = currentPlayer;
     if (player === 'X') {
-        //playerArray = playerArrayX;
         playerArray = [];
         for (obj of currentBoard.boxesInside) {
             if (obj.xClick === true) {
@@ -315,7 +311,6 @@ function playerClick() {
         }
         playerName = playerXName;
     } else {
-        //playerArray = playerArrayO;
         playerArray = [];
         for (obj of currentBoard.boxesInside) {
             if (obj.oClick === true) {
@@ -358,7 +353,7 @@ function playerClick() {
             currentPlayer = 'X';
             playerName = playerXName;
         }
-        currentBoard.element.style.opacity = '.5';
+        currentBoard.element.style.opacity = '.3';
         for (obj of currentBoard.boxesInside) {
             obj.element.removeEventListener("click", boxClick);
         }
@@ -377,7 +372,7 @@ function playerClick() {
             currentPlayer = 'X';
             playerName = playerXName;
         }
-        currentBoard.element.style.opacity = '.5';
+        currentBoard.element.style.opacity = '.3';
         for (obj of currentBoard.boxesInside) {
             obj.element.removeEventListener("click", boxClick);
         }
@@ -415,11 +410,9 @@ function playerClick() {
 //        return textDisplay.textContent = `OH NO! It's a Draw!!!!`;
 //    }
 //    if (currentPlayer === 'X') {
-//        playerArrayX.push(noClick[index].value);
 //        playerXClick();
 //        if (onePlayer === true && turnCount !== 9) {
 //            compMove = compBestMove();
-//            playerArrayO.push(compMove);
 //            compMove = compMove.toString();
 //            currentBox = numBoxLookUp[compMove];
 //            currentBox.element.style.color = 'black';
@@ -428,7 +421,6 @@ function playerClick() {
 //            playerOClick();
 //        }
 //    } else {
-//        playerArrayO.push(noClick[index].value);
 //        playerOClick();
 //    }
 //}

@@ -53,9 +53,11 @@ body {
     position: relative;
     color: red;
     cursor: crosshair;
-    opacity: .5;
+    opacity: .3;
   }
-
+  #gameE {
+      opacity: 1;
+  }
   .box {
     background-color: orange;
     width: 53px;
