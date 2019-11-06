@@ -8,8 +8,6 @@ let playerOName = 'O';
 let playerName;
 let currentPlayer = 'X';
 let player;
-//let timer;
-//let count = 6;
 //let noClick = [];
 //let index;
 
@@ -292,7 +290,7 @@ function boxClick() {
                 box.removeEventListener("click", boxClick);
             }
             twoPlayerGame.disabled = false;
-            onePlayerGame.disabled = false;
+            //onePlayerGame.disabled = false;
             return textDisplay.textContent = `OH NO! It's a Draw!!!!`;
         }
     } else {
@@ -385,57 +383,3 @@ function playerClick() {
         return textDisplay.textContent = `It is ${playerName}'s turn!`;
     }
 }
-
-//function ranNoClickBox() {
-//    noClick = [];
-//    for (obj of boxArray) {
-//        if (obj.clicked === false) {
-//            noClick.push(obj)
-//        }
-//    }
-//    index = (Math.floor(Math.random() * noClick.length + 1) - 1);
-//    noClick[index].clicked = true;
-//    noClick[index].element.textContent = currentPlayer;
-//    noClick[index].element.style.color = 'navy';
-//    if (turnCount === 9) {
-//        for (box of boxes) {
-//            box.removeEventListener("click", boxClick);
-//        }
-//        subOneButton.disabled = false;
-//        subTwoButton.disabled = false;
-//        twoPlayerGame.disabled = false;
-//        onePlayerGame.disabled = false;
-//        clearInterval(timer);
-//        count = 6;
-//        return textDisplay.textContent = `OH NO! It's a Draw!!!!`;
-//    }
-//    if (currentPlayer === 'X') {
-//        playerXClick();
-//        if (onePlayer === true && turnCount !== 9) {
-//            compMove = compBestMove();
-//            compMove = compMove.toString();
-//            currentBox = numBoxLookUp[compMove];
-//            currentBox.element.style.color = 'black';
-//            currentBox.element.textContent = currentPlayer;
-//            currentBox.clicked = true;
-//            playerOClick();
-//        }
-//    } else {
-//        playerOClick();
-//    }
-//}
-
-//timer countdown function
-//function countDown() {
-//    if (count === 0) {
-//        ranNoClickBox();
-//        clearInterval(countDown);
-//    } else {
-//        count = count - 1;
-//        for (obj of boxArray) {
-//            if (obj.clicked === false) {
-//                obj.element.textContent = `${count}`;
-//            }
-//        }
-//    }
-//}
