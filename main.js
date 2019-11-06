@@ -215,7 +215,7 @@ function playerClick() {
                             }
                         }
                         onePlayer = false;
-                        return textDisplay.textContent = `${playerXName} WINS!!!!`;
+                        return textDisplay.textContent = `${playerName} WINS!!!!`;
                     }
                 }
             }

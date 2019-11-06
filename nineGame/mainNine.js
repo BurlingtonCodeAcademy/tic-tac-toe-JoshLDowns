@@ -8,6 +8,8 @@ let playerOName = 'O';
 let playerName;
 let currentPlayer = 'X';
 let player;
+let winArray = [];
+let totalCheck;
 //let noClick = [];
 //let index;
 
@@ -212,33 +214,35 @@ let boxArrayH = [h1, h2, h3, h4, h5, h6, h7, h8, h9];
 let boxArrayI = [i1, i2, i3, i4, i5, i6, i7, i8, i9];
 
 class Board {
-    constructor(element, boxesInside) {
+    constructor(element, boxesInside, tag) {
         this.element = element;
         this.boxesInside = boxesInside;
+        this.tag = tag;
+        this.full = false;
     }
 }
-let gameA = new Board(document.getElementById("gameA"), boxArrayA);
-let gameB = new Board(document.getElementById("gameB"), boxArrayB);
-let gameC = new Board(document.getElementById("gameC"), boxArrayC);
-let gameD = new Board(document.getElementById("gameD"), boxArrayD);
-let gameE = new Board(document.getElementById("gameE"), boxArrayE);
-let gameF = new Board(document.getElementById("gameF"), boxArrayF);
-let gameG = new Board(document.getElementById("gameG"), boxArrayG);
-let gameH = new Board(document.getElementById("gameH"), boxArrayH);
-let gameI = new Board(document.getElementById("gameI"), boxArrayI);
+let gameA = new Board(document.getElementById("gameA"), boxArrayA, 'a');
+let gameB = new Board(document.getElementById("gameB"), boxArrayB, 'b');
+let gameC = new Board(document.getElementById("gameC"), boxArrayC, 'c');
+let gameD = new Board(document.getElementById("gameD"), boxArrayD, 'd');
+let gameE = new Board(document.getElementById("gameE"), boxArrayE, 'e');
+let gameF = new Board(document.getElementById("gameF"), boxArrayF, 'f');
+let gameG = new Board(document.getElementById("gameG"), boxArrayG, 'g');
+let gameH = new Board(document.getElementById("gameH"), boxArrayH, 'h');
+let gameI = new Board(document.getElementById("gameI"), boxArrayI, 'i');
 
 let boardArray = [gameA, gameB, gameC, gameD, gameE, gameF, gameG, gameH, gameI];
 
 boardLookUp = {
-    'gameA' : gameA,
-    'gameB' : gameB,
-    'gameC' : gameC,
-    'gameD' : gameD,
-    'gameE' : gameE,
-    'gameF' : gameF,
-    'gameG' : gameG,
-    'gameH' : gameH,
-    'gameI' : gameI
+    'gameA': gameA,
+    'gameB': gameB,
+    'gameC': gameC,
+    'gameD': gameD,
+    'gameE': gameE,
+    'gameF': gameF,
+    'gameG': gameG,
+    'gameH': gameH,
+    'gameI': gameI
 }
 
 let textDisplay = document.getElementById("textDisplay");  //sets event listener for status window
@@ -259,6 +263,9 @@ twoPlayerGame.addEventListener("click", () => {
     }
     gameE.element.style.opacity = '1';
     currentBoard = gameE;
+    for (obj of boardArray) {
+        obj.full = false;
+    }
     for (obj of boxArray) {
         obj.clicked = false;
         obj.xClick = false;
@@ -274,10 +281,20 @@ twoPlayerGame.addEventListener("click", () => {
 
 function boxClick() {
     currentBox = boxLookUp[event.target.id];
+    currentBoard = boardLookUp[`game${currentBox.boardValue.toUpperCase()}`];
     if (currentBox.clicked === false) {
         event.target.style.color = 'black';
         event.target.textContent = currentPlayer;
         currentBox.clicked = true;
+        totalCheck = 0;
+        for (box of currentBoard.boxesInside) {
+            if (box.clicked === true) {
+                totalCheck += 1;
+            }
+        }
+        if (totalCheck === 9) {
+            currentBoard.full = true;
+        }
         if (currentPlayer === 'X') {
             currentBox.xClick = true;
             playerClick();
@@ -325,7 +342,7 @@ function playerClick() {
                     trueCount = trueCount + 1;
                     if (trueCount === 3) {
                         for (num of arr) {
-                            currentBox = boxLookUp[currentBox.boardValue+num.toString()]
+                            currentBox = boxLookUp[currentBox.boardValue + num.toString()]
                             currentBox.element.style.backgroundColor = 'red';
                             currentBox.element.style.color = 'yellow';
                         }
@@ -351,17 +368,37 @@ function playerClick() {
             currentPlayer = 'X';
             playerName = playerXName;
         }
-        currentBoard.element.style.opacity = '.3';
-        for (obj of currentBoard.boxesInside) {
-            obj.element.removeEventListener("click", boxClick);
+        if (boardLookUp[currentBox.moveValue].full === true) {
+            for (obj of boardArray) {
+                if (obj.full === false) {
+                    for (box of obj.boxesInside) {
+                        box.element.addEventListener("click", boxClick);
+                    }
+                    obj.element.style.opacity = '1';
+                } else {
+                    for (box of obj.boxesInside) {
+                        box.element.removeEventListener("click", boxClick);
+                    }
+                    obj.element.style.opacity = '.3';
+                }
+            }
+            turnCount += 1;
+            return textDisplay.textContent = `It is ${playerName}'s turn!`;
+        } else {
+            for (obj of boardArray) {
+                obj.element.style.opacity = '.3';
+                for (box of obj.boxesInside) {
+                    box.element.removeEventListener("click", boxClick);
+                }
+            }
+            currentBoard = boardLookUp[currentBox.moveValue];
+            currentBoard.element.style.opacity = '1';
+            for (obj of currentBoard.boxesInside) {
+                obj.element.addEventListener("click", boxClick);
+            }
+            turnCount += 1;
+            return textDisplay.textContent = `It is ${playerName}'s turn!`;
         }
-        currentBoard = boardLookUp[currentBox.moveValue];
-        currentBoard.element.style.opacity = '1';
-        for (obj of currentBoard.boxesInside) {
-            obj.element.addEventListener("click", boxClick);
-        }
-        turnCount += 1;
-        return textDisplay.textContent = `It is ${playerName}'s turn!`;
     } else {
         if (player === 'X') {
             currentPlayer = 'O';
@@ -370,16 +407,141 @@ function playerClick() {
             currentPlayer = 'X';
             playerName = playerXName;
         }
-        currentBoard.element.style.opacity = '.3';
-        for (obj of currentBoard.boxesInside) {
-            obj.element.removeEventListener("click", boxClick);
+        if (boardLookUp[currentBox.moveValue].full === true) {
+            for (obj of boardArray) {
+                if (obj.full === false) {
+                    for (box of obj.boxesInside) {
+                        box.element.addEventListener("click", boxClick);
+                    }
+                    obj.element.style.opacity = '1';
+                } else {
+                    for (box of obj.boxesInside) {
+                        box.element.removeEventListener("click", boxClick);
+                    }
+                    obj.element.style.opacity = '.3';
+                }
+            }
+            turnCount += 1;
+            return textDisplay.textContent = `It is ${playerName}'s turn!`;
+        } else {
+            for (obj of boardArray) {
+                obj.element.style.opacity = '.3';
+                for (box of obj.boxesInside) {
+                    box.element.removeEventListener("click", boxClick);
+                }
+            }
+            currentBoard = boardLookUp[currentBox.moveValue];
+            currentBoard.element.style.opacity = '1';
+            for (obj of currentBoard.boxesInside) {
+                obj.element.addEventListener("click", boxClick);
+            }
+            turnCount += 1;
+            return textDisplay.textContent = `It is ${playerName}'s turn!`;
         }
-        currentBoard = boardLookUp[currentBox.moveValue];
-        currentBoard.element.style.opacity = '1';
-        for (obj of currentBoard.boxesInside) {
-            obj.element.addEventListener("click", boxClick);
-        }
-        turnCount += 1;
-        return textDisplay.textContent = `It is ${playerName}'s turn!`;
     }
+}
+
+function canWin() {
+    winArray = [];
+    playerArray = [];
+    for (obj of currentBoard.boxesInside) {
+        if (obj.oClick === true) {
+            playerArray.push(obj.value);
+        }
+    }
+    for (arr of winningArrays) {
+        trueCount = 0;
+        for (let i = 0; i < playerArray.length; i++) {
+            if (arr.includes(playerArray[i])) {
+                trueCount = trueCount + 1;
+            }
+            if (trueCount === 2) {
+                winArray.push(arr);
+            }
+        }
+    }
+    if (winArray.length > 0) {
+        for (arr of winArray) {
+            for (item of arr) {
+                if (boxLookUp[`${currentBoard.tag}${item.toString()}`].clicked === false) {
+                    return item;
+                }
+            }
+        }
+    } else {
+        return false;
+    }
+    return false;
+}
+
+function opCanWin() {
+    winArray = [];
+    playerArray = [];
+    for (obj of currentBoard.boxesInside) {
+        if (obj.xClick === true) {
+            playerArray.push(obj.value);
+        }
+    }
+    for (arr of winningArrays) {
+        trueCount = 0;
+        for (let i = 0; i < playerArray.length; i++) {
+            if (arr.includes(playerArray[i])) {
+                trueCount = trueCount + 1;
+            }
+            if (trueCount === 2) {
+                winArray.push(arr);
+            }
+        }
+    }
+    if (winArray.length > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function setUpWin() {
+    let setUpArray = [];
+    let notClicked = 0;
+    playerArray = [];
+    for (obj of currentBoard.boxesInside) {
+        if (obj.oClick === true) {
+            playerArray.push(obj.value);
+        }
+    }
+    for (arr of winningArrays) {
+        trueCount = 0;
+        for (let i = 0; i < playerArray.length; i++) {
+            if (arr.includes(playerArray[i])) {
+                trueCount = trueCount + 1;
+            }
+            if (trueCount === 1) {
+                setUpArray.push(arr);
+            }
+        }
+    }
+    if (setUpArray.length > 0) {
+        for (arr of setUpArray) {
+            notClicked = 0;
+            for (num of arr) {
+                if (boxLookUp[`${currentBoard.tag}${item.toString()}`].clicked === false) {
+                    notClicked += 1;
+                }
+                if (notClicked === 2) {
+                    if (boxLookUp[[`${currentBoard.tag}${arr[0].toString()}`]].clicked === false) {
+                        return arr[0];
+                    } else {
+                        return arr[1];
+                    }
+                }
+            }
+        }
+    } else {
+        return false;
+    }
+    return false;
+}
+
+function compBestMove() {
+
 }
