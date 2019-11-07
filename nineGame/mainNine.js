@@ -574,16 +574,20 @@ function setUpWin() {
         }
     }
     if (setUpArray.length > 0) {
+        //console.log(setUpArray);
         for (arr of setUpArray) {
             notClicked = 0;
             for (num of arr) {
+                //console.log(`${currentBoard.tag}${num.toString()}`);
                 if (boxLookUp[`${currentBoard.tag}${num.toString()}`].clicked === false) {
                     notClicked += 1;
                 }
                 if (notClicked === 2) {
                     if (boxLookUp[[`${currentBoard.tag}${arr[0].toString()}`]].clicked === false) {
+                        //console.log(arr[0]);
                         return arr[0];
                     } else {
+                        //console.log(arr[1]);
                         return arr[1];
                     }
                 }
@@ -640,9 +644,6 @@ function compBestMove() {
             noClick.push(obj)
         }
     }
-    if (win) {
-        return win;
-    }
     for (board of boardArray) {
         boxCount = 0;
         if (board.tag !== currentBoard.tag) {
@@ -656,16 +657,15 @@ function compBestMove() {
             }
         }
     }
-
     let noClickValues = noClick.map((a) => a = a.value);
-    console.log(noClickValues);
-
     for (move of potentialMoves) {
         if (!noClickValues.includes(move)) {
             potentialMoves.splice(potentialMoves.indexOf(move), 1);
         }
     }
-
+    if (win && noClickValues.includes(win)) {
+        return win;
+    }
     if (potentialMoves.length > 0) {
         if (setUp && potentialMoves.includes(setUp)) {
             return setUp;
