@@ -656,6 +656,16 @@ function compBestMove() {
             }
         }
     }
+
+    let noClickValues = noClick.map((a) => a = a.value);
+    console.log(noClickValues);
+
+    for (move of potentialMoves) {
+        if (!noClickValues.includes(move)) {
+            potentialMoves.splice(potentialMoves.indexOf(move), 1);
+        }
+    }
+
     if (potentialMoves.length > 0) {
         if (setUp && potentialMoves.includes(setUp)) {
             return setUp;
@@ -674,6 +684,13 @@ function compBestMove() {
             }
         }
     }
+
+    for (move of potentialMoves) {
+        if (!noClickValues.includes(move)) {
+            potentialMoves.splice(potentialMoves.indexOf(move), 1);
+        }
+    }
+
     if (potentialMoves.length > 0) {
         if (setUp && potentialMoves.includes(setUp)) {
             return setUp;
