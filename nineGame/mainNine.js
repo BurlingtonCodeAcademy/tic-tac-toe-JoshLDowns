@@ -10,8 +10,13 @@ let currentPlayer = 'X';
 let player;
 let winArray = [];
 let totalCheck;
-//let noClick = [];
-//let index;
+let boxCount;
+let potentialMoves = [];
+let blockArray = [];
+let noClick = [];
+let index;
+let onePlayer;
+let compMove;
 
 let boxes = Array.from(document.getElementsByClassName("box"));
 
@@ -214,22 +219,23 @@ let boxArrayH = [h1, h2, h3, h4, h5, h6, h7, h8, h9];
 let boxArrayI = [i1, i2, i3, i4, i5, i6, i7, i8, i9];
 
 class Board {
-    constructor(element, boxesInside, tag) {
+    constructor(element, boxesInside, tag, boardNumber) {
         this.element = element;
         this.boxesInside = boxesInside;
         this.tag = tag;
+        this.boardNumber = boardNumber;
         this.full = false;
     }
 }
-let gameA = new Board(document.getElementById("gameA"), boxArrayA, 'a');
-let gameB = new Board(document.getElementById("gameB"), boxArrayB, 'b');
-let gameC = new Board(document.getElementById("gameC"), boxArrayC, 'c');
-let gameD = new Board(document.getElementById("gameD"), boxArrayD, 'd');
-let gameE = new Board(document.getElementById("gameE"), boxArrayE, 'e');
-let gameF = new Board(document.getElementById("gameF"), boxArrayF, 'f');
-let gameG = new Board(document.getElementById("gameG"), boxArrayG, 'g');
-let gameH = new Board(document.getElementById("gameH"), boxArrayH, 'h');
-let gameI = new Board(document.getElementById("gameI"), boxArrayI, 'i');
+let gameA = new Board(document.getElementById("gameA"), boxArrayA, 'a', 1);
+let gameB = new Board(document.getElementById("gameB"), boxArrayB, 'b', 2);
+let gameC = new Board(document.getElementById("gameC"), boxArrayC, 'c', 3);
+let gameD = new Board(document.getElementById("gameD"), boxArrayD, 'd', 4);
+let gameE = new Board(document.getElementById("gameE"), boxArrayE, 'e', 5);
+let gameF = new Board(document.getElementById("gameF"), boxArrayF, 'f', 6);
+let gameG = new Board(document.getElementById("gameG"), boxArrayG, 'g', 7);
+let gameH = new Board(document.getElementById("gameH"), boxArrayH, 'h', 8);
+let gameI = new Board(document.getElementById("gameI"), boxArrayI, 'i', 9);
 
 let boardArray = [gameA, gameB, gameC, gameD, gameE, gameF, gameG, gameH, gameI];
 
@@ -246,16 +252,47 @@ boardLookUp = {
 }
 
 let textDisplay = document.getElementById("textDisplay");  //sets event listener for status window
-//let onePlayerGame = document.getElementById("start1p");
+let onePlayerGame = document.getElementById("start1p");
 let twoPlayerGame = document.getElementById("start2p");
+
+onePlayerGame.addEventListener("click", () => {
+    twoPlayerGame.disabled = true;
+    onePlayerGame.disabled = true;
+    onePlayer = true;
+    playerOName = 'Computer';
+    textDisplay.textContent = `It is ${playerXName}'s turn!`
+    playerArray = [];
+    blockArray = [];
+    turnCount = 0;
+    currentPlayer = 'X';
+    for (board of boardArray) {
+        board.element.style.opacity = '.3';
+    }
+    gameE.element.style.opacity = '1';
+    currentBoard = gameE;
+    for (obj of boardArray) {
+        obj.full = false;
+    }
+    for (obj of boxArray) {
+        obj.clicked = false;
+        obj.xClick = false;
+        obj.oClick = false;
+        obj.element.textContent = '';
+        obj.element.style.color = 'red';
+        obj.element.style.backgroundColor = 'orange';
+    }
+    for (obj of boxArrayE) {
+        obj.element.addEventListener("click", boxClick);
+    }
+})
 
 twoPlayerGame.addEventListener("click", () => {
     twoPlayerGame.disabled = true;
-    //onePlayerGame.disabled = true;
+    onePlayerGame.disabled = true;
     onePlayer = false;
     textDisplay.textContent = `It is ${playerXName}'s turn!`
     playerArray = [];
-    //blockArray = [];
+    blockArray = [];
     turnCount = 0;
     currentPlayer = 'X';
     for (board of boardArray) {
@@ -298,6 +335,15 @@ function boxClick() {
         if (currentPlayer === 'X') {
             currentBox.xClick = true;
             playerClick();
+            if (onePlayer === true) {
+                compMove = compBestMove();
+                currentBox = boxLookUp[`${currentBoard.tag}${compMove}`]
+                currentBox.element.style.color = 'black';
+                currentBox.element.textContent = currentPlayer;
+                currentBox.clicked = true;
+                currentBox.oClick = true;
+                playerClick();
+            }
         } else {
             currentBox.oClick = true;
             playerClick();
@@ -350,7 +396,7 @@ function playerClick() {
                             box.removeEventListener("click", boxClick);
                         }
                         twoPlayerGame.disabled = false;
-                        //onePlayerGame.disabled = false;
+                        onePlayerGame.disabled = false;
                         for (obj of boxArray) {
                             if (obj.clicked === false) {
                                 obj.element.textContent = ``;
@@ -474,10 +520,10 @@ function canWin() {
     return false;
 }
 
-function opCanWin() {
+function opCanWin(board) {
     winArray = [];
     playerArray = [];
-    for (obj of currentBoard.boxesInside) {
+    for (obj of board.boxesInside) {
         if (obj.xClick === true) {
             playerArray.push(obj.value);
         }
@@ -494,10 +540,17 @@ function opCanWin() {
         }
     }
     if (winArray.length > 0) {
-        return true;
+        for (arr of winArray) {
+            for (item of arr) {
+                if (boxLookUp[`${board.tag}${item.toString()}`].clicked === false) {
+                    return true;
+                }
+            }
+        }
     } else {
         return false;
     }
+    return false;
 }
 
 function setUpWin() {
@@ -524,7 +577,7 @@ function setUpWin() {
         for (arr of setUpArray) {
             notClicked = 0;
             for (num of arr) {
-                if (boxLookUp[`${currentBoard.tag}${item.toString()}`].clicked === false) {
+                if (boxLookUp[`${currentBoard.tag}${num.toString()}`].clicked === false) {
                     notClicked += 1;
                 }
                 if (notClicked === 2) {
@@ -542,6 +595,94 @@ function setUpWin() {
     return false;
 }
 
-function compBestMove() {
+function mustBlock() {
+    playerArray = [];
+    for (obj of currentBoard.boxesInside) {
+        if (obj.xClick === true) {
+            playerArray.push(obj.value);
+        }
+    }
+    for (arr of winningArrays) {
+        trueCount = 0;
+        for (let i = 0; i < playerArray.length; i++) {
+            if (arr.includes(playerArray[i])) {
+                trueCount = trueCount + 1;
+            }
+            if (trueCount === 2) {
+                blockArray.push(arr);
+            }
+        }
+    }
+    if (blockArray.length > 0) {
+        for (arr of blockArray) {
+            for (item of arr) {
+                if (boxLookUp[`${currentBoard.tag}${item.toString()}`].clicked === false) {
+                    return item;
+                }
+            }
+        }
+    } else {
+        return false;
+    }
+    return false;
+}
 
+function compBestMove() {
+    potentialMoves = [];
+    boxCount = 0;
+    let win = canWin();
+    let setUp = setUpWin();
+    let block = mustBlock();
+    let opWin;
+    noClick = [];
+    for (obj of currentBoard.boxesInside) {
+        if (obj.clicked === false) {
+            noClick.push(obj)
+        }
+    }
+    if (win) {
+        return win;
+    }
+    for (board of boardArray) {
+        boxCount = 0;
+        if (board.tag !== currentBoard.tag) {
+            for (box of board.boxesInside) {
+                if (box.clicked === false) {
+                    boxCount += 1;
+                }
+            }
+            if (boxCount === 9) {
+                potentialMoves.push(board.boardNumber);
+            }
+        }
+    }
+    if (potentialMoves.length > 0) {
+        if (setUp && potentialMoves.includes(setUp)) {
+            return setUp;
+        } else if (block && potentialMoves.includes(block)) {
+            return block;
+        } else {
+            return potentialMoves[0];
+        }
+    }
+    potentialMoves = [];
+    for (board of boardArray) {
+        if (board.tag !== currentBoard.tag) {
+            opWin = opCanWin(board);
+            if (opWin === false) {
+                potentialMoves.push(board.boardNumber);
+            }
+        }
+    }
+    if (potentialMoves.length > 0) {
+        if (setUp && potentialMoves.includes(setUp)) {
+            return setUp;
+        } else if (block && potentialMoves.includes(block)) {
+            return block;
+        } else {
+            return potentialMoves[0];
+        }
+    } else {
+        return noClick[(Math.floor(Math.random() * noClick.length + 1) - 1)].value;
+    }
 }
