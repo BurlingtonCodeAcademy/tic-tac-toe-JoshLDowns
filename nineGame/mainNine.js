@@ -12,12 +12,13 @@ let winArray = [];
 let totalCheck;
 let boxCount;
 let potentialMoves = [];
+let tempMoves = [];
 let blockArray = [];
 let noClick = [];
 let index;
 let onePlayer;
 let compMove;
-
+//array of all divs to make setting event listeners easier
 let boxes = Array.from(document.getElementsByClassName("box"));
 
 class Box {  //each box is an object with an element to point to, a value, and a clicked boolean
@@ -31,7 +32,7 @@ class Box {  //each box is an object with an element to point to, a value, and a
         this.oClick = false;
     }
 }
-
+//box objects from class
 let a1 = new Box(document.getElementById("a1"), 1, 'a', 'gameA');
 let a2 = new Box(document.getElementById("a2"), 2, 'a', 'gameB');
 let a3 = new Box(document.getElementById("a3"), 3, 'a', 'gameC');
@@ -121,7 +122,7 @@ let i6 = new Box(document.getElementById("i6"), 6, 'i', 'gameF');
 let i7 = new Box(document.getElementById("i7"), 7, 'i', 'gameG');
 let i8 = new Box(document.getElementById("i8"), 8, 'i', 'gameH');
 let i9 = new Box(document.getElementById("i9"), 9, 'i', 'gameI');
-
+//box look up table
 let boxLookUp = {
     "a1": a1,
     "a2": a2,
@@ -207,6 +208,7 @@ let boxLookUp = {
 }
 
 let winningArrays = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]];
+//various box arrays for refrencing and iterating
 let boxArray = [a1, a2, a3, a4, a5, a6, a7, a8, a9, b1, b2, b3, b4, b5, b6, b7, b8, b9, c1, c2, c3, c4, c5, c6, c7, c8, c9, d1, d2, d3, d4, d5, d6, d7, d8, d9, e1, e2, e3, e4, e5, e6, e7, e8, e9, f1, f2, f3, f4, f5, f6, f7, f8, f9, g1, g2, g3, g4, g5, g6, g7, g8, g9, h1, h2, h3, h4, h5, h6, h7, h8, h9, i1, i2, i3, i4, i5, i6, i7, i8, i9]
 let boxArrayA = [a1, a2, a3, a4, a5, a6, a7, a8, a9];
 let boxArrayB = [b1, b2, b3, b4, b5, b6, b7, b8, b9];
@@ -217,7 +219,7 @@ let boxArrayF = [f1, f2, f3, f4, f5, f6, f7, f8, f9];
 let boxArrayG = [g1, g2, g3, g4, g5, g6, g7, g8, g9];
 let boxArrayH = [h1, h2, h3, h4, h5, h6, h7, h8, h9];
 let boxArrayI = [i1, i2, i3, i4, i5, i6, i7, i8, i9];
-
+//board class, each board has an element to refrence, and array of the included box objects, a tag and number for reference, and a boolean to determine if all boxes are clicked
 class Board {
     constructor(element, boxesInside, tag, boardNumber) {
         this.element = element;
@@ -227,6 +229,7 @@ class Board {
         this.full = false;
     }
 }
+//board objects
 let gameA = new Board(document.getElementById("gameA"), boxArrayA, 'a', 1);
 let gameB = new Board(document.getElementById("gameB"), boxArrayB, 'b', 2);
 let gameC = new Board(document.getElementById("gameC"), boxArrayC, 'c', 3);
@@ -238,7 +241,7 @@ let gameH = new Board(document.getElementById("gameH"), boxArrayH, 'h', 8);
 let gameI = new Board(document.getElementById("gameI"), boxArrayI, 'i', 9);
 
 let boardArray = [gameA, gameB, gameC, gameD, gameE, gameF, gameG, gameH, gameI];
-
+//board look up table
 boardLookUp = {
     'gameA': gameA,
     'gameB': gameB,
@@ -251,10 +254,10 @@ boardLookUp = {
     'gameI': gameI
 }
 
-let textDisplay = document.getElementById("textDisplay");  //sets event listener for status window
-let onePlayerGame = document.getElementById("start1p");
-let twoPlayerGame = document.getElementById("start2p");
-
+let textDisplay = document.getElementById("textDisplay");  //sets target for status window
+let onePlayerGame = document.getElementById("start1p");  //sets target for one player button
+let twoPlayerGame = document.getElementById("start2p");  //sets target for two player button
+//one player click event listener
 onePlayerGame.addEventListener("click", () => {
     twoPlayerGame.disabled = true;
     onePlayerGame.disabled = true;
@@ -285,7 +288,7 @@ onePlayerGame.addEventListener("click", () => {
         obj.element.addEventListener("click", boxClick);
     }
 })
-
+//two player click event listener
 twoPlayerGame.addEventListener("click", () => {
     twoPlayerGame.disabled = true;
     onePlayerGame.disabled = true;
@@ -315,7 +318,7 @@ twoPlayerGame.addEventListener("click", () => {
         obj.element.addEventListener("click", boxClick);
     }
 });
-
+//function that handles boxes being clicked
 function boxClick() {
     currentBox = boxLookUp[event.target.id];
     currentBoard = boardLookUp[`game${currentBox.boardValue.toUpperCase()}`];
@@ -360,7 +363,7 @@ function boxClick() {
         textDisplay.textContent = `NO! Pick another one!`;
     }
 }
-
+//called on click, determines player, checks if they win, switches boards when needed
 function playerClick() {
     player = currentPlayer;
     if (player === 'X') {
@@ -486,7 +489,7 @@ function playerClick() {
         }
     }
 }
-
+//determines if computer player can win
 function canWin() {
     winArray = [];
     playerArray = [];
@@ -519,7 +522,7 @@ function canWin() {
     }
     return false;
 }
-
+//determines if opponent can win on target board
 function opCanWin(board) {
     winArray = [];
     playerArray = [];
@@ -552,7 +555,7 @@ function opCanWin(board) {
     }
     return false;
 }
-
+//determines if computer can set up a win on current board
 function setUpWin() {
     let setUpArray = [];
     let notClicked = 0;
@@ -574,20 +577,16 @@ function setUpWin() {
         }
     }
     if (setUpArray.length > 0) {
-        //console.log(setUpArray);
         for (arr of setUpArray) {
             notClicked = 0;
             for (num of arr) {
-                //console.log(`${currentBoard.tag}${num.toString()}`);
                 if (boxLookUp[`${currentBoard.tag}${num.toString()}`].clicked === false) {
                     notClicked += 1;
                 }
                 if (notClicked === 2) {
                     if (boxLookUp[[`${currentBoard.tag}${arr[0].toString()}`]].clicked === false) {
-                        //console.log(arr[0]);
                         return arr[0];
                     } else {
-                        //console.log(arr[1]);
                         return arr[1];
                     }
                 }
@@ -598,7 +597,40 @@ function setUpWin() {
     }
     return false;
 }
-
+//determines if computer has a win set up on target board
+function haveSetUp(board) {
+    winArray = [];
+    playerArray = [];
+    for (obj of board.boxesInside) {
+        if (obj.oClick === true) {
+            playerArray.push(obj.value);
+        }
+    }
+    for (arr of winningArrays) {
+        trueCount = 0;
+        for (let i = 0; i < playerArray.length; i++) {
+            if (arr.includes(playerArray[i])) {
+                trueCount = trueCount + 1;
+            }
+            if (trueCount === 2) {
+                winArray.push(arr);
+            }
+        }
+    }
+    if (winArray.length > 0) {
+        for (arr of winArray) {
+            for (item of arr) {
+                if (boxLookUp[`${board.tag}${item.toString()}`].clicked === false) {
+                    return true;
+                }
+            }
+        }
+    } else {
+        return false;
+    }
+    return false;
+}
+//determines if the computer must make a block in current board
 function mustBlock() {
     playerArray = [];
     for (obj of currentBoard.boxesInside) {
@@ -630,7 +662,7 @@ function mustBlock() {
     }
     return false;
 }
-
+//determines the computers best move(kinda... need to research minimax functions to rewrite this section... right now the game plays but is easily won)
 function compBestMove() {
     potentialMoves = [];
     boxCount = 0;
@@ -638,6 +670,7 @@ function compBestMove() {
     let setUp = setUpWin();
     let block = mustBlock();
     let opWin;
+    let hasSetUp;
     noClick = [];
     for (obj of currentBoard.boxesInside) { //determintes which boxes are not clicked in current board
         if (obj.clicked === false) {
@@ -677,24 +710,41 @@ function compBestMove() {
     }
     potentialMoves = [];
     for (board of boardArray) {  //if no open boards, checks each board to see if player can win, sets potential moves to safe moves
-            opWin = opCanWin(board);
-            if (opWin === false) {
-                potentialMoves.push(board.boardNumber);
-            }
+        opWin = opCanWin(board);
+        if (opWin === false) {
+            potentialMoves.push(board.boardNumber);
+        }
     }
     for (move of potentialMoves) { //removes any clicked boxes that might have been missed from potential moves array
         if (!noClickValues.includes(move)) {
             potentialMoves.splice(potentialMoves.indexOf(move), 1);
         }
     }
-    if (potentialMoves.length > 0) {  //makes move with remaining potential moves, trying to avoid setting up a loss
-        //need to add check that removes potential moves that would send player to a board where they can make a block
-        if (setUp && potentialMoves.includes(setUp)) {  //checks if it can make a set up move in current board
-            return setUp;
-        } else if (block && potentialMoves.includes(block)) {  //checks if it can make a block in current board
-            return block;
+    if (potentialMoves.length > 0) {  
+        tempMoves = potentialMoves;
+        for (board of boardArray) {  //attempts to not send to a board where opponent can block a win
+            hasSetUp = haveSetUp(board);
+            if (hasSetUp === true && potentialMoves.includes(board.boardNumber)) {
+                potentialMoves.slice(board.boardNumber, 1)
+            }
+        }
+        if (potentialMoves.length > 0) {
+            if (setUp && potentialMoves.includes(setUp)) {  //checks if it can make a set up move in current board
+                return setUp;
+            } else if (block && potentialMoves.includes(block)) {  //checks if it can make a block in current board
+                return block;
+            } else {
+                return potentialMoves[0];  //returns first available move if no better move is available
+            }
         } else {
-            return potentialMoves[0];  //returns first available move if no better move is available
+            potentialMoves = tempMoves;  //makes move with remaining potential moves, trying to avoid setting up a loss
+            if (setUp && potentialMoves.includes(setUp)) {  //checks if it can make a set up move in current board
+                return setUp;
+            } else if (block && potentialMoves.includes(block)) {  //checks if it can make a block in current board
+                return block;
+            } else {
+                return potentialMoves[0];  //returns first available move if no better move is available
+            }
         }
     } else {
         return noClick[(Math.floor(Math.random() * noClick.length + 1) - 1)].value;
