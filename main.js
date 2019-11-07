@@ -447,7 +447,7 @@ function compBestMove() {
             bestMove = 1;
             return bestMove;
         }
-    } else if (noClick.length === 6 && mustBlock() === false) {
+    } else if (noClick.length === 6 && mustBlock() === false) {  //determines second move to avoid traps (need to make this more streamlined eventually)
         playerArray = [];
         for (obj of boxArray) {
             if (obj.xClick === true) {

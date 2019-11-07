@@ -639,12 +639,12 @@ function compBestMove() {
     let block = mustBlock();
     let opWin;
     noClick = [];
-    for (obj of currentBoard.boxesInside) {
+    for (obj of currentBoard.boxesInside) { //determintes which boxes are not clicked in current board
         if (obj.clicked === false) {
             noClick.push(obj)
         }
     }
-    for (board of boardArray) {
+    for (board of boardArray) {  //determines if there are any boards with no moves and puts them into potential moves array
         boxCount = 0;
         if (board.tag !== currentBoard.tag) {
             for (box of board.boxesInside) {
@@ -657,47 +657,44 @@ function compBestMove() {
             }
         }
     }
-    let noClickValues = noClick.map((a) => a = a.value);
-    for (move of potentialMoves) {
+    let noClickValues = noClick.map((a) => a = a.value); //creates an array of box values from the noClicked array
+    for (move of potentialMoves) {  //removes any clicked boxes that might have been missed from the potential moves array
         if (!noClickValues.includes(move)) {
             potentialMoves.splice(potentialMoves.indexOf(move), 1);
         }
     }
-    if (win && noClickValues.includes(win)) {
+    if (win && noClickValues.includes(win)) { //if computer has a win it will make that move
         return win;
     }
-    if (potentialMoves.length > 0) {
-        if (setUp && potentialMoves.includes(setUp)) {
+    if (potentialMoves.length > 0) {  //if there is an open box it makes move that will send to open board, and try to play efficiently in current board
+        if (setUp && potentialMoves.includes(setUp)) { //checks if it can make a set up move in current board
             return setUp;
-        } else if (block && potentialMoves.includes(block)) {
+        } else if (block && potentialMoves.includes(block)) { //checks if it can make a block in current board
             return block;
         } else {
-            return potentialMoves[0];
+            return potentialMoves[0]; //returns first available open board if no better move is available
         }
     }
     potentialMoves = [];
-    for (board of boardArray) {
-        if (board.tag !== currentBoard.tag) {
+    for (board of boardArray) {  //if no open boards, checks each board to see if player can win, sets potential moves to safe moves
             opWin = opCanWin(board);
             if (opWin === false) {
                 potentialMoves.push(board.boardNumber);
             }
-        }
     }
-
-    for (move of potentialMoves) {
+    for (move of potentialMoves) { //removes any clicked boxes that might have been missed from potential moves array
         if (!noClickValues.includes(move)) {
             potentialMoves.splice(potentialMoves.indexOf(move), 1);
         }
     }
-
-    if (potentialMoves.length > 0) {
-        if (setUp && potentialMoves.includes(setUp)) {
+    if (potentialMoves.length > 0) {  //makes move with remaining potential moves, trying to avoid setting up a loss
+        //need to add check that removes potential moves that would send player to a board where they can make a block
+        if (setUp && potentialMoves.includes(setUp)) {  //checks if it can make a set up move in current board
             return setUp;
-        } else if (block && potentialMoves.includes(block)) {
+        } else if (block && potentialMoves.includes(block)) {  //checks if it can make a block in current board
             return block;
         } else {
-            return potentialMoves[0];
+            return potentialMoves[0];  //returns first available move if no better move is available
         }
     } else {
         return noClick[(Math.floor(Math.random() * noClick.length + 1) - 1)].value;
