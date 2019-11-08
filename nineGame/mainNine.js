@@ -715,17 +715,20 @@ function compBestMove() {
             potentialMoves.push(board.boardNumber);
         }
     }
+    console.log(potentialMoves);
+    console.log(noClickValues);
     for (move of potentialMoves) { //removes any clicked boxes that might have been missed from potential moves array
         if (!noClickValues.includes(move)) {
             potentialMoves.splice(potentialMoves.indexOf(move), 1);
         }
     }
+    console.log(potentialMoves);
     if (potentialMoves.length > 0) {  
         tempMoves = potentialMoves;
         for (board of boardArray) {  //attempts to not send to a board where opponent can block a win
             hasSetUp = haveSetUp(board);
             if (hasSetUp === true && potentialMoves.includes(board.boardNumber)) {
-                potentialMoves.slice(board.boardNumber, 1)
+                potentialMoves.splice(board.boardNumber, 1)
             }
         }
         if (potentialMoves.length > 0) {
@@ -747,6 +750,7 @@ function compBestMove() {
             }
         }
     } else {
-        return noClick[(Math.floor(Math.random() * noClick.length + 1) - 1)].value;
+        console.log(noClickValues[(Math.floor(Math.random() * noClickValues.length + 1) - 1)]);
+        return noClickValues[(Math.floor(Math.random() * noClickValues.length + 1) - 1)];
     }
 }
