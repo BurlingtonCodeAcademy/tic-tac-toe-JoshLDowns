@@ -1,0 +1,140 @@
+body {
+  background-color: rgb(175, 252, 226);
+  display: flex;
+  justify-content: center;
+}
+
+#player1, #player2 {
+  display: inline-flex;
+  align-content: center;
+  margin-top: 5px;
+  justify-content: center;
+  position: relative;
+  border: none;
+  background-color: none;
+}
+
+#header {
+  border-radius: 10px;
+  width: 534px;
+  height: 60px;
+  position: absolute;
+  display: inline-flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center; 
+}
+
+h1 {
+  top: 0px;
+  font-family: fantasy;
+}
+
+#title {
+  padding: 5px;
+  border: 3px solid black;
+  background-color: aquamarine;
+  color: black;
+  font-size: 2em;
+  align-self: center;
+  position: relative;
+  margin: 0px 5px 0px 5px;
+}
+
+#game {
+  width : 540px;
+  height: 540px;
+  padding: 0px;
+  margin-top : 70px;
+  background-color: aquamarine;
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+div {
+  background-color: orange;
+  border: 3px solid black;
+  position: absolute;
+}
+
+.status {
+  border-radius: 10px;
+  width: 534px;
+  height: 35px;
+  position: absolute;
+  margin-top: 620px;
+  display: inline-flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.box {
+  width: 160px;
+  height: 160px;
+  padding: 5px;
+  margin: 2px;
+  font-family: fantasy;
+  font-size: 100px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: red;
+  cursor: crosshair;
+}
+
+.textField {
+  align-self: center;
+  width: 166px;
+  height: 26px;
+  border: 1px solid black;
+  text-align: center;
+  font-family: fantasy;
+  font-size: 1.2em;
+  background-color: aquamarine;
+}
+
+#textDisplay {
+  align-self: center;
+  width: 225px;
+  height: 26px;
+  border: 1px solid black;
+  margin-right: 10px;
+  text-align: center;
+  font-family: fantasy;
+  font-size: 1.2em;
+  background-color: aquamarine;
+}
+
+.sub {
+  border-radius: 12px;
+  align-self: center;
+  font-family: fantasy;
+  background-color: aquamarine;
+  border: 2px solid navy;
+  margin-top: 1px;
+  margin-left: 17px;
+}
+
+button {
+  border-radius: 15px;
+  height: 30px;
+  align-self: center;
+  font-family: fantasy;
+  background-color: aquamarine;
+  border: 2px solid navy;
+  margin: 0px 3px 0px 3px;
+}
+
+.sub:hover {
+  border: 2px solid aquamarine;
+  background-color: orange;
+}
+
+button:hover {
+  border: 2px solid aquamarine;
+  background-color: orange;
+}

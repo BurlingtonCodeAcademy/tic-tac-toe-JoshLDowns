@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Tic Tac Toe</title>
+  <link type="text/css" rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="header">
+    <div id="player1">
+        <form id='subOne'>
+            <input class='textField' type=text />
+            <br>
+            <input class='sub' id = 'sub1'; type=submit value='Submit Player X Name' />
+          </form>
+    </div>
+
+    <h1 id="title">Tic Tac Toe!</h1>
+
+    <div id="player2">
+        <form id='subTwo'>
+            <input class='textField' type=text />
+            <br>
+            <input class ='sub' id = 'sub2'; type=submit value='Submit Player O Name' />
+          </form>
+    </div>
+  </div>
+
+  <div id="game">
+    <div class="box" id="one"></div>
+    <div class="box" id="two"></div>
+    <div class="box" id="three"></div>
+    <div class="box" id="four"></div>
+    <div class="box" id="five"></div>
+    <div class="box" id="six"></div>
+    <div class="box" id="seven"></div>
+    <div class="box" id="eight"></div>
+    <div class="box" id="nine"></div>
+  </div>
+
+  <div class="status">
+    <p id="textDisplay"></p>
+    <button id="start1p" type="button">Start 1 Player Game</button>
+    <button id="start2p" type="button">Start 2 Player Game</button>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+
+</html>
